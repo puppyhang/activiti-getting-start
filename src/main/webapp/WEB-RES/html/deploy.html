@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="/res/plugins/fileupload/css/fileinput.min.css">
+</head>
+<body>
+	<form action="/process/def/deploy" method="post">
+		<input id="deploy-xml" name="file" type="file">
+	</form>
+</body>
+<script type="text/javascript" src="/res/js/jquery-1.9.1.js"></script>
+<script type="text/javascript"
+	src="/res/plugins/fileupload/js/fileinput.min.js"></script>
+ <script type="text/javascript" src="/res/plugins/fileupload/js/zh.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#deploy-xml").fileinput();
+	})
+</script>
+</html>
