@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<settingsSecurity>
-          <master>{WbMy7YqKXSUHI4fsirmn2HaAV21iJnSBFYiTmq38Y57QB7AmW30Yc+ua7/CMZI1g}</master>
-</settingsSecurity>
-<!--master password 明文 asdf , <master>标签内的是 步骤2. 生成的密码-->
