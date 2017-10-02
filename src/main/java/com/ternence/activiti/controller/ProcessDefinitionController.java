@@ -66,6 +66,7 @@ public class ProcessDefinitionController extends AbstractSystemController {
 			//部署流程文件
 			Deployment deployment = repositoryService.createDeployment()
 					.addInputStream("process.bpmn20.xml", new FileInputStream(targetFile))
+					.name("项目审批流程")
 					.deploy();
 			process.setId(deployment.getId());
 			process.setName(deployment.getName());

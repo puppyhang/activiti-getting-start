@@ -3,6 +3,7 @@
 <html>
 <head>
 <title>activiti管理中心</title>
+<link rel="shortcut icon" href="/favicon.ico">
 <link rel="stylesheet" type="text/css"
 	href="/res/plugins/bootstrap3/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/res/css/index.css">
@@ -107,8 +108,8 @@
 <script type="text/javascript" src="/res/plugins/jq-validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="/res/plugins/jq-validate/messages_zh.min.js"></script>
 <script type="text/javascript" src="/res/js/vue.min.js"></script>
-<script type="text/javascript" src="/res/js/index.js"></script>
 <script type="text/javascript" src="/res/js/jquery.form.js"></script>
+<script type="text/javascript" src="/res/js/index.js"></script>
 <script type="text/javascript">
 	$('input[id=lefile]').change(function() {
 		$('#photoCover').val($(this).val());
