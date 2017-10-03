@@ -33,22 +33,30 @@
 				</tr>
 			</thead>
 			<tbody id="process-definition-table">
-				<tr v-for="process in definitions">
-					<th>1</th>
+				<tr v-for="(process,index) in definitions">
+					<th>{{humanIndex(index)}}</th>
 					<th>{{process.id}}</th>
 					<th>{{process.deploymentId}}</th>
 					<th>{{process.name}}</th>
-					<th><a class="btn btn-success">start</a> 
-					<a class="btn btn-success">graph</a> 
+					<th>
+					<!-- 启动流程定义 -->
+					<a class="btn btn-success"
+					v-bind:data-href="'/process/def/start/'+process.id"
+					v-on:click="startProcessInstanceById($event)">start</a> 
+					<!-- 查看流程图片 -->
+					<a class="btn btn-success"
+					v-bind:data-href="'/process/graph/def/'+process.id"
+					v-bind:data-name="process.name"
+					v-on:click="viewGraph($event)">graph</a> 
 					<!-- 使用Vue绑定数据属性 -->
 					<a class="btn btn-danger"
-						v-bind:data-href="'/process/assign/delete/'+process.deploymentId"
+						v-bind:data-href="'/process/def/delete/'+process.deploymentId"
 						v-on:click="deleteProcessById($event)">delete</a>
 					</th>
 				</tr>
 			</tbody>
 		</table>
-
+		
 		<table class="table table-bordered table-hover">
 			<caption>流程实例</caption>
 			<thead>
@@ -59,12 +67,20 @@
 					<th>OPRATIONS</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<th>1</th>
-					<th>0xa0bdcgff</th>
-					<th>Ternence</th>
-					<th><a class="btn btn-success">graph</a></th>
+			<tbody id="process-instance-table">
+				<tr v-for="(instance,index) in instances">
+					<th>{{humanIndex(index)}}</th>
+					<th>{{instance.id}}</th>
+					<th>{{instance.processDefinition}}</th>
+					<th>
+					<a class="btn btn-success">assign</a>
+					<!-- 查看流程图片 -->
+					<a class="btn btn-success"
+					v-bind:data-href="'/process/graph/ins/'+instance.id"
+					v-bind:data-name="instance.id"
+					v-on:click="viewGraph($event)">graph</a> 
+					<a class="btn btn-danger">delete</a>
+					</th>
 				</tr>
 			</tbody>
 		</table>
@@ -105,6 +121,9 @@
 				<a class="btn btn-success" onclick="$('input[id=lefile]').click();">浏览</a>
 			</div>
 		</form>
+		<div id="container">
+		
+		</div>
 	</div>
 </body>
 <script type="text/javascript" src="/res/js/jquery-1.9.1.js"></script>
@@ -118,7 +137,4 @@
 <script type="text/javascript" src="/res/js/vue.min.js"></script>
 <script type="text/javascript" src="/res/js/jquery.form.js"></script>
 <script type="text/javascript" src="/res/js/index.js"></script>
-<script type="text/javascript">
-	
-</script>
 </html>
