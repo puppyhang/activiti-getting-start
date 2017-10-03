@@ -6,7 +6,7 @@
 	<version>1.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>BPMN 2.0 with Activiti - Examples</name>
-
+	<description>这是服务器上的修改</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<activiti-version>5.18.0</activiti-version>
