@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.activiti.bpmn.exceptions.XMLException;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
@@ -13,11 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ternence.activiti.bean.ProcessDefinitionBean;
+import com.ternence.activiti.bean.SimpleProcessDefinitionBean;
 import com.ternence.activiti.utils.FileUtilsExtension;
 
 /**
@@ -42,7 +44,7 @@ public class ProcessDefinitionController extends AbstractSystemController {
 	 * @formatter:off
 	 */
 	@ResponseBody
-	@RequestMapping("/deploy")
+	@RequestMapping(path="/deploy",method=RequestMethod.POST)
 	public Object deployProcess(@RequestPart(value = "file", required = false) MultipartFile multipart,
 			HttpServletRequest request) {
 		try {
@@ -59,15 +61,24 @@ public class ProcessDefinitionController extends AbstractSystemController {
 				return renderingFaildResp("so sorry ! 流程文件上传失败,请稍后重试");
 			}
 			String contextPath = request.getSession().getServletContext().getContextPath();
-			ProcessDefinitionBean process = new ProcessDefinitionBean();
+			SimpleProcessDefinitionBean process = new SimpleProcessDefinitionBean();
 			process.setPath(contextPath + "/res/process/" + targetFile.getName());
 			//得到Activiti的服务
 			RepositoryService repositoryService = processEngine.getRepositoryService();
 			//部署流程文件
-			Deployment deployment = repositoryService.createDeployment()
-					.addInputStream("process.bpmn20.xml", new FileInputStream(targetFile))
-					.name("项目审批流程")
-					.deploy();
+			Deployment deployment = null;
+			try {
+				deployment = repositoryService.createDeployment()
+						.addInputStream("process.bpmn20.xml", new FileInputStream(targetFile))
+						.name("项目审批流程")
+						.deploy();
+			}catch (XMLException e) {
+				
+				e.printStackTrace();
+				
+				return renderingFaildResp("请选择一个有效的XML流程定义文件");
+			}
+			
 			process.setId(deployment.getId());
 			process.setName(deployment.getName());
 			return renderingUniformResp(200, "流程部署成功", process);

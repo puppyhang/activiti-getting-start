@@ -1,14 +1,12 @@
 package com.ternence.activiti.bean;
 
-import java.io.Serializable;
-
 /**
  * 统一的请求响应数据对应的bean
  * 
  * @author Ternence
  * 
  */
-public class UniformResponseBodyBean<T extends Serializable> {
+public class UniformResponseBodyBean<T> {
 	//请求状态
 	private Integer status;
 	//请求消息
