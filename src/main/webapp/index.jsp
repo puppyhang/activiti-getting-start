@@ -27,21 +27,27 @@
 				<tr>
 					<th>#</th>
 					<th>ID</th>
+					<th>DEPLOYMENT-ID</th>
 					<th>NAME</th>
 					<th>OPRATIONS</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
+			<tbody id="process-definition-table">
+				<tr v-for="process in definitions">
 					<th>1</th>
-					<th>0xa0bdcgff</th>
-					<th>Ternence</th>
-					<th><a class="btn btn-success">start</a> <a
-						class="btn btn-success">graph</a></th>
+					<th>{{process.id}}</th>
+					<th>{{process.deploymentId}}</th>
+					<th>{{process.name}}</th>
+					<th><a class="btn btn-success">start</a> 
+					<a class="btn btn-success">graph</a> 
+					<!-- 使用Vue绑定数据属性 -->
+					<a class="btn btn-danger"
+						v-bind:data-href="'/process/assign/delete/'+process.deploymentId"
+						v-on:click="deleteProcessById($event)">delete</a>
+					</th>
 				</tr>
 			</tbody>
 		</table>
-
 
 		<table class="table table-bordered table-hover">
 			<caption>流程实例</caption>
@@ -86,17 +92,17 @@
 				</tr>
 			</tbody>
 		</table>
-		<form id="deploy-pane" enctype="multipart/form-data" onsubmit="return false;"
-			 method="post" style="display: none">
+		<form id="deploy-pane" enctype="multipart/form-data"
+			onsubmit="return false;" method="post" style="display: none">
 			<!-- 隐藏用于真实上传文件的输入框 -->
-			<input id="lefile" name="file" type="file" style="display: none"required>
+			<input id="lefile" name="file" type="file" style="display: none"
+				required>
 			<div class="input-append">
-				<input id="photoCover" class="input-large form-control" 
-						type="text" placeholder="选择xml流程定义文件"
-					style="display: inline; width: 400px; margin-left: 10px" required/> 
-					
-					<a class="btn btn-success" 
-					onclick="$('input[id=lefile]').click();">浏览</a>
+				<input id="photoCover" class="input-large form-control" type="text"
+					placeholder="选择xml流程定义文件"
+					style="display: inline; width: 400px; margin-left: 10px" required />
+
+				<a class="btn btn-success" onclick="$('input[id=lefile]').click();">浏览</a>
 			</div>
 		</form>
 	</div>
@@ -105,14 +111,14 @@
 <script type="text/javascript"
 	src="/res/plugins/bootstrap3/js/bootstrap.js"></script>
 <script type="text/javascript" src="/res/plugins/layer3/layer.js"></script>
-<script type="text/javascript" src="/res/plugins/jq-validate/jquery.validate.min.js"></script>
-<script type="text/javascript" src="/res/plugins/jq-validate/messages_zh.min.js"></script>
+<script type="text/javascript"
+	src="/res/plugins/jq-validate/jquery.validate.min.js"></script>
+<script type="text/javascript"
+	src="/res/plugins/jq-validate/messages_zh.min.js"></script>
 <script type="text/javascript" src="/res/js/vue.min.js"></script>
 <script type="text/javascript" src="/res/js/jquery.form.js"></script>
 <script type="text/javascript" src="/res/js/index.js"></script>
 <script type="text/javascript">
-	$('input[id=lefile]').change(function() {
-		$('#photoCover').val($(this).val());
-	});
+	
 </script>
 </html>

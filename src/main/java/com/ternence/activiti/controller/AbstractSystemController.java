@@ -1,12 +1,10 @@
 package com.ternence.activiti.controller;
 
-import java.io.Serializable;
-
 import com.ternence.activiti.bean.UniformResponseBodyBean;
 
 public class AbstractSystemController {
 
-	public <T extends Serializable> Object renderingUniformResp(int status, String message, T data) {
+	public <T> UniformResponseBodyBean<T> renderingUniformResp(int status, String message, T data) {
 		UniformResponseBodyBean<T> uniformResponseBodyBean = new UniformResponseBodyBean<>();
 		uniformResponseBodyBean.setStatus(status);
 		uniformResponseBodyBean.setMessage(message);
@@ -14,13 +12,18 @@ public class AbstractSystemController {
 		return uniformResponseBodyBean;
 	}
 
-	public <T extends Serializable> Object renderingFaildResp(String message) {
+	public <T> UniformResponseBodyBean<T> renderingFaildResp(String message) {
 
 		return renderingUniformResp(400, message, null);
 	}
 
-	public <T extends Serializable> Object renderingSuccessResp(T data) {
+	public <T> UniformResponseBodyBean<T> renderingSuccessResp(T data) {
 
 		return renderingUniformResp(200, "请求成功", data);
+	}
+
+	public <T> UniformResponseBodyBean<T> renderingSuccessResp(String message, T data) {
+
+		return renderingUniformResp(200, message, data);
 	}
 }
