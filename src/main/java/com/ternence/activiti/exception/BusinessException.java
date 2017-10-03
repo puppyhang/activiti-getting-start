@@ -7,6 +7,8 @@ package com.ternence.activiti.exception;
  */
 public class BusinessException extends RuntimeException {
 
+	private static final long serialVersionUID = -8108523953804411974L;
+
 	public BusinessException() {
 		super();
 	}

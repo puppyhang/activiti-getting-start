@@ -1,6 +1,7 @@
 package com.ternence.activiti.cmd;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 import org.activiti.bpmn.model.BpmnModel;
@@ -32,7 +33,11 @@ public class ProcessInstanceDiagramCmd implements Command<InputStream> {
 		GetBpmnModelCmd getBpmnModelCmd = new GetBpmnModelCmd(processDefinitionId);
 		BpmnModel bpmnModel = getBpmnModelCmd.execute(commandContext);
 		DefaultProcessDiagramGenerator processDiagramGenerator = new DefaultProcessDiagramGenerator();
-		InputStream is = processDiagramGenerator.generateDiagram(bpmnModel, "png", activiityIds);
+		//生成图片
+		InputStream is = processDiagramGenerator.generateDiagram(
+				bpmnModel, "png", activiityIds, Collections.<String>emptyList(), "宋体", "宋体",
+				getClass().getClassLoader(), 1.0
+		);
 		return is;
 	}
 }

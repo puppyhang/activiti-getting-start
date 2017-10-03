@@ -46,6 +46,7 @@
 					<!-- 查看流程图片 -->
 					<a class="btn btn-success"
 					v-bind:data-href="'/process/graph/def/'+process.id"
+					v-bind:data-name="process.name"
 					v-on:click="viewGraph($event)">graph</a> 
 					<!-- 使用Vue绑定数据属性 -->
 					<a class="btn btn-danger"
@@ -73,7 +74,11 @@
 					<th>{{instance.processDefinition}}</th>
 					<th>
 					<a class="btn btn-success">assign</a>
-					<a class="btn btn-success">graph</a>
+					<!-- 查看流程图片 -->
+					<a class="btn btn-success"
+					v-bind:data-href="'/process/graph/ins/'+instance.id"
+					v-bind:data-name="instance.id"
+					v-on:click="viewGraph($event)">graph</a> 
 					<a class="btn btn-danger">delete</a>
 					</th>
 				</tr>
@@ -116,6 +121,9 @@
 				<a class="btn btn-success" onclick="$('input[id=lefile]').click();">浏览</a>
 			</div>
 		</form>
+		<div id="container">
+		
+		</div>
 	</div>
 </body>
 <script type="text/javascript" src="/res/js/jquery-1.9.1.js"></script>
