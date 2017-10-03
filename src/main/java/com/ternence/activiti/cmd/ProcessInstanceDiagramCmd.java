@@ -11,6 +11,12 @@ import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntityManager;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 
+/**
+ * 使用Activiti的命令模式查看流程实例对应的图片
+ * 
+ * @author Ternence
+ *
+ */
 public class ProcessInstanceDiagramCmd implements Command<InputStream> {
 	protected String processInstanceId;
 
@@ -23,13 +29,10 @@ public class ProcessInstanceDiagramCmd implements Command<InputStream> {
 		ExecutionEntity executionEntity = executionEntityManager.findExecutionById(processInstanceId);
 		List<String> activiityIds = executionEntity.findActiveActivityIds();
 		String processDefinitionId = executionEntity.getProcessDefinitionId();
-
 		GetBpmnModelCmd getBpmnModelCmd = new GetBpmnModelCmd(processDefinitionId);
 		BpmnModel bpmnModel = getBpmnModelCmd.execute(commandContext);
-		DefaultProcessDiagramGenerator processDiagramGenerator = new
-				DefaultProcessDiagramGenerator();
-		InputStream is = processDiagramGenerator.
-				generateDiagram(bpmnModel, "png", activiityIds);
+		DefaultProcessDiagramGenerator processDiagramGenerator = new DefaultProcessDiagramGenerator();
+		InputStream is = processDiagramGenerator.generateDiagram(bpmnModel, "png", activiityIds);
 		return is;
 	}
 }
