@@ -17,3 +17,7 @@ th {
 	position: absolute;
 	margin-left: -200px;
 }
+
+tr th:last-child {
+	text-align: right;
+}

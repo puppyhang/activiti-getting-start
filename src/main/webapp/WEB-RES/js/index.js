@@ -5,6 +5,7 @@ $(function() {
 	// URL管理模块
 	var URL = {
 		PROCESS_INSTANCE_LIST : '/process/ins/list',
+		ASSIGNED_TASK_LIST : '/process/assign/list',
 	};
 	// 文件选择的JS
 	$('input[id=lefile]').change(function() {
@@ -23,7 +24,7 @@ $(function() {
 			area : [ '700px', '300px' ],
 			title : $target.attr('data-name'),
 			content : image,
-			btn : [ '图片太大？拖动右下角缩放,或点我下载' ],
+			btn : [ '图片太大？拖动右下角缩放,或点我下载', "在浏览器中打开" ],
 			cancel : function(index, layero) {
 				layer.close(index);
 			}
@@ -59,6 +60,28 @@ $(function() {
 
 		});
 	}
+
+	// 人类可读的下标
+	function humanIndex(index) {
+
+		return index + 1;
+	}
+
+	// 获取任务列表
+	function getTaskListAndBinding() {
+		$.get(URL.ASSIGNED_TASK_LIST, function(data) {
+			if (data && data['status'] === 200) {
+				// 刷新列表
+				taskTable.$data['tasks'] = data['data'];
+			} else {
+				layer.alert(data['message'], {
+					zIndex : 1000,
+					icon : 5
+				})
+
+			}
+		})
+	}
 	// ------------------------------------------Common usage end
 	//
 	//
@@ -72,10 +95,7 @@ $(function() {
 		},
 		methods : {
 			// 计算一个面向人类的可读索引
-			humanIndex : function(index) {
-				console.log(index);
-				return index + 1;
-			},
+			humanIndex : humanIndex,
 			// 根据id删除流程
 			deleteProcessById : function(event) {
 				// 被点击的元素
@@ -90,6 +110,10 @@ $(function() {
 						});
 						// 如果删除成功就刷新列表
 						getProcessListAndBinding();
+						// 刷新流程实例列表
+						getProcessInstanceListAndBinding();
+						// 刷新任务列表
+						getTaskListAndBinding();
 					} else {
 						layer.alert(data['message'], {
 							zIndex : 100000,
@@ -110,6 +134,8 @@ $(function() {
 						});
 						// 刷新流程实例列表
 						getProcessInstanceListAndBinding();
+						// 刷新任务列表
+						getTaskListAndBinding();
 					} else {
 						// 流程启动失败
 						layer.alert(result['message'], {
@@ -195,16 +221,86 @@ $(function() {
 			instances : [],
 		},
 		methods : {
-			// TODO 思考有没有继承，实现方法复用
-			humanIndex : function(index) {
-
-				return index + 1;
-			},
+			humanIndex : humanIndex,
 			// 查看流程图片的方法
-			viewGraph : viewGraph
+			viewGraph : viewGraph,
+			deleteProcessInsById : function(event) {
+				var $target = $(event.target);
+				var formSubmitOptions = {
+					type : 'POST',
+					url : $target.attr("data-href"),
+					datatype : "json",
+					success : function(data) {
+						layer.closeAll();
+						if (data && data['status'] === 200) {
+							layer.alert(data['message'], {
+								zIndex : 10000,
+								icon : 1
+							});
+							// 刷新页面
+							getProcessInstanceListAndBinding();
+							getTaskListAndBinding();
+						} else {
+							layer.alert(data['message'], {
+								zIndex : 10000,
+								icon : 5
+							});
+						}
+					},
+					clearForm : true,
+					resetForm : true
+				}
+				// 弹框确认是否删除以及填写原因
+				layer.open({
+					type : 1,
+					area : [ "500px", "300px" ],
+					title : "为什么删除?",
+					content : $('#delete-instance-pane'),
+					btn : [ "确定", "取消" ],
+					btn1 : function(index, layero) {
+						var $form = $(layero).find('form');
+						// 提交表单参数
+						$form.ajaxSubmit(formSubmitOptions);
+					}
+				});
+			}
 		}
 	});
 	// 初始化流程实例列表
 	getProcessInstanceListAndBinding();
 	// -------------------------------------------------Process Instance end
+	//
+	//
+	// -------------------------------------------------Assigned task start
+	var taskTable = new Vue({
+		el : "#task-table",
+		data : {
+			tasks : []
+		},
+		methods : {
+			humanIndex : humanIndex,
+			// 查看流程图片的方法
+			viewGraph : viewGraph,
+			completeTask : function(event) {
+				var $target = $(event.target);
+				$.get($target.attr('data-href'), function(data) {
+					if (data && data['status'] === 200) {
+						layer.alert(data['message'], {
+							zIndex : 10000,
+							icon : 1
+						});
+						// 刷新列表
+						getTaskListAndBinding();
+					} else {
+						layer.alert(data['message'], {
+							zIndex : 10000,
+							icon : 5
+						});
+					}
+				})
+			}
+		}
+	});
+	getTaskListAndBinding();
+	// -------------------------------------------------Assigned task end
 });

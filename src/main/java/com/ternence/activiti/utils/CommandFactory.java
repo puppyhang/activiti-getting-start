@@ -2,8 +2,10 @@ package com.ternence.activiti.utils;
 
 import java.io.InputStream;
 
+import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.impl.cmd.GetDeploymentProcessDiagramCmd;
 import org.activiti.engine.impl.interceptor.Command;
+import org.activiti.engine.task.Task;
 import org.springframework.util.StringUtils;
 
 import com.ternence.activiti.cmd.ProcessInstanceDiagramCmd;
@@ -16,8 +18,10 @@ import com.ternence.activiti.cmd.ProcessInstanceDiagramCmd;
  */
 public class CommandFactory {
 	/**
-	 * 一个简单的工厂方法
+	 * 一个简单的获取Command对象工厂方法
+	 * 
 	 * @param processType 流程类型---流程定义，流程实例，待办任务,不能为null
+	 * @param processId 流程id---流程定义id，流程实例id
 	 * @return 各种类型对应的{@link Command}对象
 	 */
 	public static Command<InputStream> getCommand(String processType, String processId) {
@@ -33,12 +37,33 @@ public class CommandFactory {
 				command = new ProcessInstanceDiagramCmd(processInstanceId);
 				break;
 			case "task":
-				//TODO 完成task模块对应的graph命令
+				String taskId = processId;
+				command = new ProcessInstanceDiagramCmd(taskId);
 				break;
 			}
 		}
 		//else directly return null;
 		return command;
+	}
+
+	/**
+	 * @see #getCommand(String, String)
+	 * 
+	 * @param engine 流程引擎对象
+	 * @param processType
+	 * @param processId 
+	 * @return 各种类型对应的{@link Command}对象
+	 */
+	public static Command<InputStream> getCommand(ProcessEngine engine, String processType, String processId) {
+		//对任务列表的图片查看做一点转换
+		if (StringUtils.hasLength(processType) && "task".equals(processType)) {
+			if (engine != null) {
+				Task task = engine.getTaskService().createTaskQuery().taskId(processId).singleResult();
+				//其实是查看流程实例的图片
+				processId = task.getProcessInstanceId();
+			}
+		}
+		return getCommand(processType, processId);
 	}
 
 }
