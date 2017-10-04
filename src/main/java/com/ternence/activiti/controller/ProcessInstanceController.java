@@ -3,14 +3,17 @@ package com.ternence.activiti.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ternence.activiti.bean.ProcessInstanceBean;
@@ -49,6 +52,31 @@ public class ProcessInstanceController extends AbstractSystemController {
 			data.add(bean);
 		}
 		return renderingSuccessResp(data);
+	}
+
+	/**
+	 * 根据流程实例ID删除流程实例
+	 * @param instanceId 流程实例ID
+	 * @return 删除结果
+	 */
+	@ResponseBody
+	@RequestMapping(path = "/delete/{instanceId}", method = RequestMethod.POST)
+	public Object deleteProcessInstanceById(@PathVariable("instanceId") String instanceId,
+			@RequestParam("reason") String reason) {
+		RuntimeService runtimeService = processEngine.getRuntimeService();
+		//流程实例查询器
+		ProcessInstanceQuery instanceQuery = runtimeService.createProcessInstanceQuery();
+		ProcessInstance instance = instanceQuery.processInstanceId(instanceId).singleResult();
+		try {
+			runtimeService.deleteProcessInstance(instanceId, reason);
+		} catch (ActivitiObjectNotFoundException e) {
+			e.printStackTrace();
+			return renderingFaildResp("不存在这条流程实例记录" + instanceId);
+		}
+		ProcessInstanceBean bean = new ProcessInstanceBean();
+		bean.setId(instanceId);
+		bean.setProcessDefinition(instance.getProcessDefinitionName());
+		return renderingSuccessResp("流程实例删除成功", bean);
 	}
 
 }

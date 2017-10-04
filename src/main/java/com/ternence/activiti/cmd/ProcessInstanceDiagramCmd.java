@@ -13,7 +13,7 @@ import org.activiti.engine.impl.persistence.entity.ExecutionEntityManager;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 
 /**
- * 使用Activiti的命令模式查看流程实例对应的图片
+ * 使用Activiti的命令模式查看流程实例对应的图片，绘制带有节点高亮的图片
  * 
  * @author Ternence
  *

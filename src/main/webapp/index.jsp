@@ -39,24 +39,20 @@
 					<th>{{process.deploymentId}}</th>
 					<th>{{process.name}}</th>
 					<th>
-					<!-- 启动流程定义 -->
-					<a class="btn btn-success"
-					v-bind:data-href="'/process/def/start/'+process.id"
-					v-on:click="startProcessInstanceById($event)">start</a> 
-					<!-- 查看流程图片 -->
-					<a class="btn btn-success"
-					v-bind:data-href="'/process/graph/def/'+process.id"
-					v-bind:data-name="process.name"
-					v-on:click="viewGraph($event)">graph</a> 
-					<!-- 使用Vue绑定数据属性 -->
-					<a class="btn btn-danger"
+						<!-- 启动流程定义 --> <a class="btn btn-success"
+						v-bind:data-href="'/process/def/start/'+process.id"
+						v-on:click="startProcessInstanceById($event)">start</a> <!-- 查看流程图片 -->
+						<a class="btn btn-success"
+						v-bind:data-href="'/process/graph/def/'+process.id"
+						v-bind:data-name="process.name" v-on:click="viewGraph($event)">graph</a>
+						<!-- 使用Vue绑定数据属性 --> <a class="btn btn-danger"
 						v-bind:data-href="'/process/def/delete/'+process.deploymentId"
 						v-on:click="deleteProcessById($event)">delete</a>
 					</th>
 				</tr>
 			</tbody>
 		</table>
-		
+
 		<table class="table table-bordered table-hover">
 			<caption>流程实例</caption>
 			<thead>
@@ -73,13 +69,13 @@
 					<th>{{instance.id}}</th>
 					<th>{{instance.processDefinition}}</th>
 					<th>
-					<a class="btn btn-success">assign</a>
-					<!-- 查看流程图片 -->
-					<a class="btn btn-success"
-					v-bind:data-href="'/process/graph/ins/'+instance.id"
-					v-bind:data-name="instance.id"
-					v-on:click="viewGraph($event)">graph</a> 
-					<a class="btn btn-danger">delete</a>
+						<!-- 查看流程图片 --> <a class="btn btn-success"
+						v-bind:data-href="'/process/graph/ins/'+instance.id"
+						v-bind:data-name="instance.id" v-on:click="viewGraph($event)">graph</a>
+						<a class="btn btn-danger"
+						v-bind:data-href="'/process/ins/delete/'+instance.id"
+						v-bind:data-name="instance.id"
+						v-on:click="deleteProcessInsById($event)">delete</a>
 					</th>
 				</tr>
 			</tbody>
@@ -98,16 +94,24 @@
 					<th>OPRATIONS</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<th>1</th>
-					<th>0xa0bdcgff</th>
-					<th>Ternence</th>
-					<th>Veivian</th>
-					<th><a class="btn btn-success">graph</a></th>
+			<tbody id="task-table">
+				<tr v-for="(task,index) in tasks">
+					<th>{{humanIndex(index)}}</th>
+					<th>{{task.id}}</th>
+					<th>{{task.name}}</th>
+					<th>{{task.assignee}}</th>
+					<th><a class="btn btn-success"
+						v-bind:data-href="'/process/assign/complete/'+task.id"
+						v-bind:data-name="task.name" v-on:click="completeTask($event)">complete</a>
+						<a class="btn btn-success"
+						v-bind:data-href="'/process/graph/task/'+task.id"
+						v-bind:data-name="task.name" v-on:click="viewGraph($event)">graph</a>
+					</th>
 				</tr>
 			</tbody>
 		</table>
+
+		<!-- 上传流程定义文件的表单 -->
 		<form id="deploy-pane" enctype="multipart/form-data"
 			onsubmit="return false;" method="post" style="display: none">
 			<!-- 隐藏用于真实上传文件的输入框 -->
@@ -121,9 +125,14 @@
 				<a class="btn btn-success" onclick="$('input[id=lefile]').click();">浏览</a>
 			</div>
 		</form>
-		<div id="container">
-		
-		</div>
+
+		<!-- 删除流程实例的表单 -->
+		<form id="delete-instance-pane" onsubmit="return false;" method="post"
+			style="display: none">
+			<textarea rows="3" cols="10" class="form-control"
+				style="height: 90%" name="reason" placeholder="请填写删除原因" required></textarea>
+			
+		</form>
 	</div>
 </body>
 <script type="text/javascript" src="/res/js/jquery-1.9.1.js"></script>

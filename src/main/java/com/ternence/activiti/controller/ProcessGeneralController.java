@@ -45,7 +45,7 @@ public class ProcessGeneralController extends AbstractSystemController {
 		//参数就不做校验了，因为本身不会为null，如果查询的时候出现异常情况那么就处理异常就好了
 		ManagementService managementService = processEngine.getManagementService();
 		//会返回null
-		Command<InputStream> command = CommandFactory.getCommand(type, processId);
+		Command<InputStream> command = CommandFactory.getCommand(processEngine, type, processId);
 		if (command == null) {
 			//这个异常不用处理，这是为了确保程序不要这样写的一个技巧
 			throw new IllegalArgumentException("命令对象不能为null");
