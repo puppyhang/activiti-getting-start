@@ -1,8 +1,9 @@
 .classpath
 .project
 .springBeans
-/target
-/.settings
-/logs
-/src/main/webapp/WEB-RES/process/
+target
+.settings
+.idea
+logs
 .tern-project
+*.iml
